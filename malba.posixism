@@ -1,0 +1,102 @@
+#!/bin/sh
+
+set -eu
+umask 0022
+export LC_ALL=C
+{ type command && type getconf ;} >/dev/null 2>&1 &&
+export PATH="$(command -p getconf PATH)${PATH+:}${PATH-}"
+export UNIX_STD=2003
+
+case "$#" in 1?*|[!1]*)
+  printf %s\\n "Usage: ${0##*/} [-A]  FILE" 1>&2
+  exit 1
+;;esac
+
+printable_only=1
+case "${1:-}" in -A)
+  printable_only=0
+  shift 1
+;;esac
+
+test -f "$1" || test -p "$1" || test -c "$1" && {
+  test -r "$1" || {
+    echo "$1": permission denied 1>&2
+    exit 2
+  }
+}
+
+case "$1" in -*)
+  set -- "./$1"
+;;esac
+
+# +b(29e*j1VMEKLyC})8&m#~W>qxdRp0wkrUo[D7,XTcA"lI
+# .v%{gJh4G\-=O@5`_3i<?Z';FNQuY]szf$!BS/|t:Pn6^Ha
+
+# readonly xlat1='43 98 40 50 57 101 42 106 49 86 77 69 75 76 121 67 125 41 56 38 109 35 126 87 62 113 120 100 82 112 48 119 107 114 85 111 91 68 55 44 88 84 99 65 34 108 73 46 118 37 123 103 74 104 52 71 92 45 61 79 64 53 96 95 51 105 60 63 90 39 59 70 78 81 117 89 93 115 122 102 36 33 66 83 47 124 116 58 80 110 54 94 72 97'
+readonly init_xlat1='xlat1[0]=43;xlat1[1]=98;xlat1[2]=40;xlat1[3]=50;xlat1[4]=57;xlat1[5]=101;xlat1[6]=42;xlat1[7]=106;xlat1[8]=49;xlat1[9]=86;xlat1[10]=77;xlat1[11]=69;xlat1[12]=75;xlat1[13]=76;xlat1[14]=121;xlat1[15]=67;xlat1[16]=125;xlat1[17]=41;xlat1[18]=56;xlat1[19]=38;xlat1[20]=109;xlat1[21]=35;xlat1[22]=126;xlat1[23]=87;xlat1[24]=62;xlat1[25]=113;xlat1[26]=120;xlat1[27]=100;xlat1[28]=82;xlat1[29]=112;xlat1[30]=48;xlat1[31]=119;xlat1[32]=107;xlat1[33]=114;xlat1[34]=85;xlat1[35]=111;xlat1[36]=91;xlat1[37]=68;xlat1[38]=55;xlat1[39]=44;xlat1[40]=88;xlat1[41]=84;xlat1[42]=99;xlat1[43]=65;xlat1[44]=34;xlat1[45]=108;xlat1[46]=73;xlat1[47]=46;xlat1[48]=118;xlat1[49]=37;xlat1[50]=123;xlat1[51]=103;xlat1[52]=74;xlat1[53]=104;xlat1[54]=52;xlat1[55]=71;xlat1[56]=92;xlat1[57]=45;xlat1[58]=61;xlat1[59]=79;xlat1[60]=64;xlat1[61]=53;xlat1[62]=96;xlat1[63]=95;xlat1[64]=51;xlat1[65]=105;xlat1[66]=60;xlat1[67]=63;xlat1[68]=90;xlat1[69]=39;xlat1[70]=59;xlat1[71]=70;xlat1[72]=78;xlat1[73]=81;xlat1[74]=117;xlat1[75]=89;xlat1[76]=93;xlat1[77]=115;xlat1[78]=122;xlat1[79]=102;xlat1[80]=36;xlat1[81]=33;xlat1[82]=66;xlat1[83]=83;xlat1[84]=47;xlat1[85]=124;xlat1[86]=116;xlat1[87]=58;xlat1[88]=80;xlat1[89]=110;xlat1[90]=54;xlat1[91]=94;xlat1[92]=72;xlat1[93]=97;'
+readonly init_valid_cmd='valid_cmd[42]="";valid_cmd[47]="";valid_cmd[60]="";valid_cmd[105]="";valid_cmd[106]="";valid_cmd[111]="";valid_cmd[112]="";valid_cmd[118]="";'
+readonly init_o='o[0,0]=4;o[0,1]=3;o[0,2]=3;o[0,3]=1;o[0,4]=0;o[0,5]=0;o[0,6]=1;o[0,7]=0;o[0,8]=0;o[1,0]=4;o[1,1]=3;o[1,2]=5;o[1,3]=1;o[1,4]=0;o[1,5]=2;o[1,6]=1;o[1,7]=0;o[1,8]=2;o[2,0]=5;o[2,1]=5;o[2,2]=4;o[2,3]=2;o[2,4]=2;o[2,5]=1;o[2,6]=2;o[2,7]=2;o[2,8]=1;o[3,0]=4;o[3,1]=3;o[3,2]=3;o[3,3]=1;o[3,4]=0;o[3,5]=0;o[3,6]=7;o[3,7]=6;o[3,8]=6;o[4,0]=4;o[4,1]=3;o[4,2]=5;o[4,3]=1;o[4,4]=0;o[4,5]=2;o[4,6]=7;o[4,7]=6;o[4,8]=8;o[5,0]=5;o[5,1]=5;o[5,2]=4;o[5,3]=2;o[5,4]=2;o[5,5]=1;o[5,6]=8;o[5,7]=8;o[5,8]=7;o[6,0]=7;o[6,1]=6;o[6,2]=6;o[6,3]=7;o[6,4]=6;o[6,5]=6;o[6,6]=4;o[6,7]=3;o[6,8]=3;o[7,0]=7;o[7,1]=6;o[7,2]=8;o[7,3]=7;o[7,4]=6;o[7,5]=8;o[7,6]=4;o[7,7]=3;o[7,8]=5;o[8,0]=8;o[8,1]=8;o[8,2]=7;o[8,3]=8;o[8,4]=8;o[8,5]=7;o[8,6]=5;o[8,7]=5;o[8,8]=4;'
+readonly init_p9='p9[0]=1;p9[1]=9;p9[2]=81;p9[3]=729;p9[4]=6561;'
+
+cat "$1" |
+tr -d '\t\n\v\f\r ' |
+od -A n -t u1 -v |
+tr -s ' \t\n' \\n |
+grep . |
+awk -F '' -v printable_only="$printable_only" '
+  BEGIN{
+    pc=0;
+    xcode=0;
+    oneprev="";
+    twoprev="";
+    '"$init_xlat1"'
+    '"$init_valid_cmd"'
+  }
+  pc==59049{
+    print "input too long" | "cat 1>&2";
+    exit (xcode=3);
+  }
+  32<$0&&$0<127{
+    $0=xlat1[($0-33+pc)%94];
+    if(!($0 in valid_cmd)){
+      print "invalid character: " $0 " (in decimal)" | "cat 1>&2";
+      exit (xcode=5);
+    }
+    print $0;
+    twoprev=oneprev;
+    oneprev=$0;
+    pc++;
+    next;
+  }
+  printable_only==0{
+    print $0;
+    twoprev=oneprev;
+    oneprev=$0;
+    pc++;
+    next;
+  }
+  printable_only==1{
+    print "nonprintable character: " $0 " (in decimal)" | "cat 1>&2";
+    exit (xcode=4);
+  }
+  END{
+    if(xcode){
+      exit xcode;
+    }
+    if(pc<2){
+      print "program too short" | "cat 1>&2"
+      exit (xcode=6);
+    }
+    '"$init_o"'
+    '"$init_p9"'
+    for(;pc<59049;pc++){
+      ret=0;
+      for(j=0;j<5;j++){
+        ret+=o[(int(twoprev/p9[j])%9),(int(oneprev/p9[j])%9)]*p9[j];
+      }
+      print ret;
+      twoprev=oneprev;
+      oneprev=ret;
+    }
+  }
+'
